@@ -117,21 +117,142 @@ O que é o TINKER?
 
 	>>> Produto::where('id','>',3)->orderBy('name','desc')->get()      (Recupera todos os produtos com 'id' maior que 3 em ordem decrescente = DESC) 
 		
-7 - COLLECTIONS
+
+7 - ATUALIZAÇÃO de REGISTROS
+	
+	1ª FORMA: Através de objeto da classe
+
+	>>> $produto = Produto::find(1) (recupera o Produto com id=1)
+	>>> $produto->name = 'Lenovo'
+	>>> $produto->save()
+	
+	ou 
+
+	2ª FORMA: Usando o método estático 'UPDATE' da classe
+ 
+	>>> Produto::where('id',1)->update(['name'=>'Lenovo']) 
 
 
+8 - EXCLUSÃO de REGISTROS
+
+	1ª FORMA: Através de objeto da classe + DELETE
+
+	>>> $produto = Produto::find(1)
+	>>> $produto->delete()
+
+	ou 
+
+	2ª FORMA: Usando o método estático 'DELETE' da classe
+
+	>>> Produto::find(1)->delete() 
+	
+	ou 
+
+	3ª FORMA: Usando o método 'DESTROY' da classe
+
+	>>> Produto::destroy(1) 
+	
+	ou 
+
+	4ª FORMA: Usando uma query (WHERE + DELETE)
+
+	>>> Produto::where('id','>',3)->delete() 
 
 
+9 - EXCLUSÃO de REGISTROS usando 'SOFT DELETE'
 
+	O SOFT DELETE permite “finalizar” o registro sem excluir do banco.
+	Ele simplesmente adiciona uma data de finalização no registro.
 
+	9.1 Como assim?
 
+		É necessário que a tabela possua a coluna “deleted_at” do tipo date.
 
+		Por padrão, o Eloquent seleciona apenas os registros que não tenham o 
+		campo “deleted_at” preenchidos, ou seja, com 'deleted_at = null'.
+		
+		Caso o registro esteja 'marcado' ele não retornará na consulta padrão.
+	
+	9.2 Por que usar?
+	
+		Esse recurso é interessante quando se tem informações valiosas no banco de dados 
+		que não podem ser apagadas.
+		
+		Exemplo 1: USUÁRIOS
+		
+			Não é interessante excluir definitivamente um registro de usuário no sistema.
+		
+		Exemplo 2: PRODUTOS DESCONTINUADOS
+		
+			Um produto possui n relacionamentos no banco. 
+			Ele não pode ser simplesmente apagado da base quando deixa de ser comercializado. 
+			Ele deve ser 'finalizado'. 
+			Caso fosse apagado perderia todo o histórico de vendas desse produto.	
+	
+	9.3 Como usar?
+	
+		1º - Criar o campo no arquivo de migração da tabela
+			
+			Schema::table('produtos', function ($table) {
+				$table->softDeletes();
+			});
+		
+		2º - Declarar 'use SoftDelete' na Model
+		
+			class Produto extends Model
+			{
+				use SoftDeletes;
+				.....
+			}
+	
+	9.4 Como "FINALIZAR" o registro?
+	
+		Usando o método DELETE normalmente.
 
+		>>> $produtos = Produto::all()            // recupera todos os Produtos
+		>>> $produtos[0]->delete()                // finaliza" o primeiro registro
 
+	9.5 Como "REMOVER" o registro permanentemente?
 
+		Usando o método 'forceDelete()':
+		
+		>>>$prod = Produto::find($id);           // Recupera o prod pelo ID
+		>>>$prod->forceDelete();                 // Exclui definitivamente
 
+		ou 
+		
+		>>>Produto::find($id)->forceDelete();   // Também é possível fazer assim, em uma única linha
+			
+	9.6 Como exibir todos os registros, inclusive os "finalizados" com Soft Deleted?
+			
+		>>>Produto::withTrashed()->get()         // Através do método 'withTrashed'
+		
+	9.7 Como verificar se um registro foi "finalizado"?
+	
+		>>>$produtos = Produto::withTrashed()->get()      // recupera todos os Produtos, inclusive os "finalizados"
+		>>>$produtos[0]->trashed()                        // verifica se o 1º produto foi marcado
+		>>>true                                           // retorna TRUE ou FALSE
+		
+		
+	9.8 Como exibir apenas os registros “finalizados” com Soft Deleted?
 
+		>>>Produto::onlyTrashed()->get();          // Através do método 'onlyTrashed'
+	
+	
+	9.9 Como "RESTAURAR" um registro deletado com Soft Deleted?
 
+		1ª FORMA: Buscando pelo Produto 'finalizado' + método 'RESTORE()'
+		
+			>>>$produtos = Produto::onlyTrashed()->get()      // recupera todos os Produtos "finalizados"
+			>>>$prod = $produtos[0]                           // pega o 1º produto finalizado
+			>>>$prod->restore();                              // Restaura o prod
+			 
+			//$prod = $prod->find($id)->restore();    // Também é possível fazer assim, em uma única linha
 
-
-
+		2ª FORMA: Buscando pelo Usuário + método 'RESTORE()'
+		
+			$prod->withTrashed()
+				 ->where('user_id', auth()->user()->id)
+				 ->restore();
+	
+	9.5 
