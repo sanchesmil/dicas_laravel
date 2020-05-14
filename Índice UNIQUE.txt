@@ -1,0 +1,12 @@
+ÍNDICE UNIQUE()
+
+A palavra UNIQUE cria um índice na coluna e especifica
+que os seus valores devem ser únicos (exclusivos) na tabela,
+ou seja, não pode haver valores repetidos.
+
+
+Ex. Restringir o campo 'email' na tabela 'clientes':
+	
+	$table->string('email')->unique();
+
+	Obs.: Neste caso, não poderão existir dois emails iguais na tabela 'clientes'.

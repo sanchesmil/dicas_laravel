@@ -1,0 +1,8 @@
+Permitir valor NULO:
+
+Para que seja possível incluir valores nulos aos campos da tabela
+na geração das Migrations, deve-se incluir a propriedade "nulable()".
+
+Ex.:  
+	$table->string('email')->nullable();
+
