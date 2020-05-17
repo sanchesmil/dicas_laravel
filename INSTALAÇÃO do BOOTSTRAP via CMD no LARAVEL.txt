@@ -29,35 +29,44 @@ INSTALA��O do BOOTSTRAP via CMD no LARAVEL
 	- vue
 	- axios
 
-	Instala��o via cmd: php artisan preset <nome_da_biblioteca>
-
-	Obs.: O comando 'preset' seleciona a biblioteca de front-end que desejo usar no meu projeto.
-
-	Local de Instala��o: pasta 'NODE_MODULES' (nova pasta criada automaticamente)
-
-
-   1.2.1) INSTALA��O da Biblioteca BOOTSTRAP
-     
-    	1� cmd: php artisan preset bootstrap  (Seleciona a biblioteca 'Boostrap')
+	1.2.1) SELEÇÃO do Bootstrap como biblioteca de FrontEnd
 	
-    	2� cmd: npm install    (Obs.: Antes de executar o 3� passo, ler o t�pico 'DESABILITAR o Vue.js do Projeto')
+		1º FORMA: Excluir o Vue da lista "devDependencies" no Arquivo "packege.json" 
+		
+		2ª FORMA: Selecionar o Boostrap via comando 'preset':
+	 
+		    cmd: php artisan preset bootstrap
 
-    	3� cmd: npm run dev   (atualiza os arquivos 'css/app.js' e 'js/app.css' na pasta 'public' com as depend�ncias do bootstrap)
+			Obs.: O comando 'preset' seleciona a biblioteca de front-end que desejo usar no meu projeto.
 
 
-   1.2.2) DESABILITAR o Vue.js do projeto:
+   1.2.2) DESABILITAR o Vue.js do projeto e Excluir os estilos css predefinidos do Laravel:
 	
-   	Por padr�o, o Laravel traz o Vue.js habilitado. 
+		Por padr�o, o Laravel traz o Vue.js habilitado. 
     	Todavia, para usar outra biblioteca de Front-End, como o Bootstrap 
     	� necess�rio desabilitar o Vue, caso contr�rio ficar� dando erro
     	no Browser (F12 = aba Console).
 
     	Desabilitando o Vue:
+		
+			* Comentar OU excluir todos os códigos que fazem ref�ncia ao Vue no arquivo 'resouces/js/app.js'
+			
+		Excluindo os Estilos padrão da Página Inicial do Laravel:
+		
+			* Excluir todos os códigos de estilo definidos em "resources/sass/_variables.scss"
 	
-    	1� Comentar todos os c�digos que fazem ref�ncia ao Vue no arquivo 'js/app.js' da pasta 'RESOURCES'
-    	2� Rodar o cmd: npm run dev (ele vai atualizar os arquivos 'css/app.js' e 'js/app.css' na pasta 'PUBLIC' sem as depend�ncias do Vue.js)
-    
---------------------------------------------------
+
+   1.2.3) INSTALAÇÃO da Biblioteca BOOTSTRAP
+     
+    	Após seguir os passos anteriores: 
+	
+    	1º - cmd: npm install    (instala todas as dependências declaradas no arquivo 'package.json')
+			
+			Local de Instalação: pasta 'NODE_MODULES' (nova pasta criada automaticamente)
+
+			Obs.: Antes de executar o 2º passo, ler o tópico 'DESABILITAR o Vue.js do Projeto'
+		
+    	2º - cmd: npm run dev   (atualiza as variáveis de estilo nos arquivos 'public/css/app.js' e '/public/js/app.css' com as depend�ncias do bootstrap sem o Vue.js)
 
 2) EXEMPLO de USO do BOOTSTRAP
 
@@ -67,7 +76,7 @@ INSTALA��O do BOOTSTRAP via CMD no LARAVEL
 	
 	2º - Criei o arquivo 'outras/exemplo.blade.php' extendendo o template do bootstrap.
 
-	3º - Configurei o arquivo de rotas (web) para chamar na URL: '.../boostrap'
+	3º - Configurei o arquivo de rotas (web) para chamar na URL. Ex.: 'curso_laravel_udemy/boostrap'
 
 --------------------------------------------------
 
