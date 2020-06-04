@@ -1,12 +1,12 @@
 PRINCIPAIS COMANDOS - MIGRATE
 
-1 - Criar nova migração
+1 - Criar nova migraÃ§Ã£o
 
 	php artisan make:migration <create_nome_da_migration> --create=<nome_da_tabela_no_plural>
 
-	Ex.: php artisan make:migration create_clientes --create=clientes
+	Ex.: php artisan make:migration create_clientes_table --create=clientes
 
-2 - Alterar uma migração existente
+2 - Alterar uma migraÃ§Ã£o existente
 	
 	Ex.: Adicionar novo campo:
 
@@ -14,36 +14,36 @@ PRINCIPAIS COMANDOS - MIGRATE
  
 	Ex.: php artisan make:migration add_cpf_clientes --table=clientes
 
-3 - Executar a migração
+3 - Executar a migraÃ§Ã£o
 	
 	php artisan migrate
 
-4 - Mostrar o status das migrações
+4 - Mostrar o status das migraÃ§Ãµes
 
 	php artisan migrate:status
 
-5 - Desfazer a última migração:
+5 - Desfazer a Ãºltima migraÃ§Ã£o:
 	
 	php artisan migrate:rollback
 
-6 - Desfazer todas as migrações
+6 - Desfazer todas as migraÃ§Ãµes
 
 	php artisan migrate:reset
 
 	Obs.: Esse comando 'apaga' o banco.
 
-7 - Desfazer e refazer todas as migrações
+7 - Desfazer e refazer todas as migraÃ§Ãµes
 
 	php artisan migrate:refresh
 
 	Obs.: Esse comando recria o banco sem nenhum registro
 
-8 - Apagar a base e refazer todas as migrações
+8 - Apagar a base e refazer todas as migraÃ§Ãµes
 
 	php artisan migrate:fresh
 
-	Obs.1: Neste caso, ele dropa direto todas as tabelas sem executar o método 'down' das migrations. 
-	Obs.2: Este comando é usado quando dá algum erro no comando 'refresh'. 
+	Obs.1: Neste caso, ele dropa direto todas as tabelas sem executar o mÃ©todo 'down' das migrations. 
+	Obs.2: Este comando Ã© usado quando dÃ¡ algum erro no comando 'refresh'. 
 
 
 

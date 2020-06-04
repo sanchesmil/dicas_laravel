@@ -1,15 +1,15 @@
 PRINCIPAIS COMANDOS - TINKER
 
-O que é o TINKER?
+O que Ã© o TINKER?
 
-	O Tinker permite que você interaja com todo o aplicativo Laravel na linha 
+	O Tinker permite que vocï¿½ interaja com todo o aplicativo Laravel na linha 
         de comando, incluindo o ORM Eloquent, tarefas, eventos e muito mais.	
 
-	O Tinker é um console interativo do Laravel (um shell do PHP) usado para 
-        a manipulação do banco através do acesso às classes do nosso projeto. 
+	O Tinker ï¿½ um console interativo do Laravel (um shell do PHP) usado para 
+        a manipulaï¿½ï¿½o do banco atravï¿½s do acesso ï¿½s classes do nosso projeto. 
 
-	Com o Tinker é possível testar relacionamentos e queries no banco de dados
-	usando os métodos nativos implementados pelo ActiveDiretory do Eloquent.
+	Com o Tinker ï¿½ possï¿½vel testar relacionamentos e queries no banco de dados
+	usando os mï¿½todos nativos implementados pelo ActiveDiretory do Eloquent.
 
 
 1 - Iniciar o Tinker
@@ -24,7 +24,7 @@ O que é o TINKER?
 	
 	>>> use \App\Produto  (Seleciona a classe)
 	
-	1ª FORMA: Criando um objeto da classe Produto
+	1ï¿½ FORMA: Criando um objeto da classe Produto
 
 	>>> $produto = new Produto
 	>>> $produto->name = 'Samsung'
@@ -32,12 +32,12 @@ O que é o TINKER?
 
 	ou 
 
-	2ª FORMA: Usando o método estático 'create' da classe Produto
+	2ï¿½ FORMA: Usando o mï¿½todo estï¿½tico 'create' da classe Produto
 
 	>>> $produto = Produto::create(['name' => 'Acer'])  
 
-        Obs.: Para usar desta forma é necessário criar o atributo 
-              'fillable' passando as colunas acessíveis.
+        Obs.: Para usar desta forma ï¿½ necessï¿½rio criar o atributo 
+              'fillable' na model Produto passando as colunas acessï¿½veis.
 
 4 - Consultar TODOS os registros da tabela 'Produtos'
 
@@ -45,19 +45,19 @@ O que é o TINKER?
 
 	>>> Produto::all()
 
-5 - Consultar registros específicos com o método FIND()
+5 - Consultar registros especï¿½ficos com o mï¿½todo FIND()
 	
-	Obs.: Por padrão o FIND consulta a chave primária chamada ID 
-              (por isso que é necessário manter o padrão de nomenclatura da pk como 'id')
+	Obs.: Por padrï¿½o o FIND consulta a chave primï¿½ria chamada ID 
+              (por isso que ï¿½ necessï¿½rio manter o padrï¿½o de nomenclatura da pk como 'id')
 
 	>>> Produto::find(1)   (Recupera o produto com ID=1 ) 
 
 	>>> Produto::find([1,2,3])  (Recupera os produtos com IDs = 1,2,3)
 
-5 - Consultar registros com o método WHERE()
+5 - Consultar registros com o mï¿½todo WHERE()
 
 	Obs.: O WHERE() precisa receber o nome do campo de consulta e um valor.
-              Opcionalmente pode ser passado um operador lógico.
+              Opcionalmente pode ser passado um operador lï¿½gico.
 
 	>>> Produto::where('name','Samsung')->get()         (Recupera o produto com name=Samsung) 
 
@@ -65,37 +65,37 @@ O que é o TINKER?
 
 	>>> Produto::whereBetween('id',[2,5])->get()        (Recupera todos os produtos no intervalo de ids entre 2 e 5) 
 
-	>>> Produto::whereNotIn('id',[1,4])->get()          (Recupera todos os produtos que não possuam os ids 1 e 4) 
+	>>> Produto::whereNotIn('id',[1,4])->get()          (Recupera todos os produtos que nï¿½o possuam os ids 1 e 4) 
 
 	Uso do LIKE:
 
 	>>> Produto::where('name','like', '%sung')->get()   (Recupera todos os produtos com nome terminando em 'sung') 
 		ou
-	>>> $part_name = "sung";  (declara uma variável)
-	>>> Produto::where('name','like', "% $part_name")->get()  (Obs.: A variável deve estar entre aspas duplas "")
+	>>> $part_name = "sung";  (declara uma variï¿½vel)
+	>>> Produto::where('name','like', "% $part_name")->get()  (Obs.: A variï¿½vel deve estar entre aspas duplas "")
 
         ENCADEAMENTO de CONSULTAS usando o WHERE (AND e OR)
 
 	>>> Produto::where('id','>',2)->where('name','like', '%Dell')->get()    (Recupera todos os produtos com id > 2 'AND' que possuam 'Dell' no nome) 
 	
 	Obs.1: Neste caso, o segundo 'where' funciona como um 'AND' 
-	Obs.2: É possível encadear vários 'where'
+	Obs.2: ï¿½ possï¿½vel encadear vï¿½rios 'where'
 	
 	>>> Produto::where('id','>',2)->orWhere('name','like', '%Dell')->get()    (Recupera todos os produtos com id > 2 'OR' que possuam 'Dell' no nome) 
 
 	Obs.1: Neste caso, o segundo 'where' funciona como um 'OR' 
 
-	AGRUPAMENTO de CONSULTAS usando FUNÇÃO
+	AGRUPAMENTO de CONSULTAS usando FUNÃ‡ÃƒO
 
 	Exemplo de consulta: (id > 1 and id < 4) and ( name='LG' or 'name' = 'Aplle')
 
-        1ª parte (id > 1 and id < 4): 
+        1ï¿½ parte (id > 1 and id < 4): 
 
 		Produto::where( function($query) { 
 				$query -> where('id','>',1)->where('id','<',4);
 			})->get()
 
-	2ª parte ( name='LG' or 'name' = 'Aplle'):
+	2ï¿½ parte ( name='LG' or 'name' = 'Aplle'):
 
 		Produto::where(function($query) { 
 				$query -> where('name','LG')->orWhere('name','Aplle');
@@ -109,7 +109,7 @@ O que é o TINKER?
 				$query -> where('name','LG')->orWhere('name','Aplle');
                           })->get()
 
-6 - ORDENAÇÃO
+6 - ORDENAÃ‡ÃƒO
 
 	>>> Produto::orderBy('name')->get()            (Recupera todos os produtos em ordem crescente = ASC) 
 
@@ -118,9 +118,9 @@ O que é o TINKER?
 	>>> Produto::where('id','>',3)->orderBy('name','desc')->get()      (Recupera todos os produtos com 'id' maior que 3 em ordem decrescente = DESC) 
 		
 
-7 - ATUALIZAÇÃO de REGISTROS
+7 - ATUALIZAÃ‡ÃƒO de REGISTROS
 	
-	1ª FORMA: Através de objeto da classe
+	1ï¿½ FORMA: Atravï¿½s de objeto da classe
 
 	>>> $produto = Produto::find(1) (recupera o Produto com id=1)
 	>>> $produto->name = 'Lenovo'
@@ -128,76 +128,76 @@ O que é o TINKER?
 	
 	ou 
 
-	2ª FORMA: Usando o método estático 'UPDATE' da classe
+	2ï¿½ FORMA: Usando o mï¿½todo estï¿½tico 'UPDATE' da classe
  
 	>>> Produto::where('id',1)->update(['name'=>'Lenovo']) 
 
 
-8 - EXCLUSÃO de REGISTROS
+8 - EXCLUSï¿½O de REGISTROS
 
-	1ª FORMA: Através de objeto da classe + DELETE
+	1ï¿½ FORMA: Atravï¿½s de objeto da classe + DELETE
 
 	>>> $produto = Produto::find(1)
 	>>> $produto->delete()
 
 	ou 
 
-	2ª FORMA: Usando o método estático 'DELETE' da classe
+	2ï¿½ FORMA: Usando o mï¿½todo estï¿½tico 'DELETE' da classe
 
 	>>> Produto::find(1)->delete() 
 	
 	ou 
 
-	3ª FORMA: Usando o método 'DESTROY' da classe
+	3ï¿½ FORMA: Usando o mï¿½todo 'DESTROY' da classe
 
 	>>> Produto::destroy(1) 
 	
 	ou 
 
-	4ª FORMA: Usando uma query (WHERE + DELETE)
+	4ï¿½ FORMA: Usando uma query (WHERE + DELETE)
 
 	>>> Produto::where('id','>',3)->delete() 
 
 
-9 - EXCLUSÃO de REGISTROS usando 'SOFT DELETE'
+9 - EXCLUSï¿½O de REGISTROS usando 'SOFT DELETE'
 
-	O SOFT DELETE permite “finalizar” o registro sem excluir do banco.
-	Ele simplesmente adiciona uma data de finalização no registro.
+	O SOFT DELETE permite ï¿½finalizarï¿½ o registro sem excluir do banco.
+	Ele simplesmente adiciona uma data de finalizaï¿½ï¿½o no registro.
 
 	9.1 Como assim?
 
-		É necessário que a tabela possua a coluna “deleted_at” do tipo date.
+		ï¿½ necessï¿½rio que a tabela possua a coluna ï¿½deleted_atï¿½ do tipo date.
 
-		Por padrão, o Eloquent seleciona apenas os registros que não tenham o 
-		campo “deleted_at” preenchidos, ou seja, com 'deleted_at = null'.
+		Por padrï¿½o, o Eloquent seleciona apenas os registros que nï¿½o tenham o 
+		campo ï¿½deleted_atï¿½ preenchidos, ou seja, com 'deleted_at = null'.
 		
-		Caso o registro esteja 'marcado' ele não retornará na consulta padrão.
+		Caso o registro esteja 'marcado' ele nï¿½o retornarï¿½ na consulta padrï¿½o.
 	
 	9.2 Por que usar?
 	
-		Esse recurso é interessante quando se tem informações valiosas no banco de dados 
-		que não podem ser apagadas.
+		Esse recurso Ã© interessante quando se tem informaï¿½ï¿½es valiosas no banco de dados 
+		que nï¿½o podem ser apagadas.
 		
-		Exemplo 1: USUÁRIOS
+		Exemplo 1: USUï¿½RIOS
 		
-			Não é interessante excluir definitivamente um registro de usuário no sistema.
+			Nï¿½o ï¿½ interessante excluir definitivamente um registro de usuï¿½rio no sistema.
 		
 		Exemplo 2: PRODUTOS DESCONTINUADOS
 		
 			Um produto possui n relacionamentos no banco. 
-			Ele não pode ser simplesmente apagado da base quando deixa de ser comercializado. 
+			Ele nï¿½o pode ser simplesmente apagado da base quando deixa de ser comercializado. 
 			Ele deve ser 'finalizado'. 
-			Caso fosse apagado perderia todo o histórico de vendas desse produto.	
+			Caso fosse apagado perderia todo o histï¿½rico de vendas desse produto.	
 	
 	9.3 Como usar?
 	
-		1º - Criar o campo no arquivo de migração da tabela
+		1ï¿½ - Criar o campo no arquivo de migraï¿½ï¿½o da tabela
 			
 			Schema::table('produtos', function ($table) {
 				$table->softDeletes();
 			});
 		
-		2º - Declarar 'use SoftDelete' na Model
+		2ï¿½ - Declarar 'use SoftDelete' na Model
 		
 			class Produto extends Model
 			{
@@ -207,52 +207,51 @@ O que é o TINKER?
 	
 	9.4 Como "FINALIZAR" o registro?
 	
-		Usando o método DELETE normalmente.
+		Usando o mï¿½todo DELETE normalmente.
 
 		>>> $produtos = Produto::all()            // recupera todos os Produtos
 		>>> $produtos[0]->delete()                // finaliza" o primeiro registro
 
 	9.5 Como "REMOVER" o registro permanentemente?
 
-		Usando o método 'forceDelete()':
+		Usando o mï¿½todo 'forceDelete()':
 		
 		>>>$prod = Produto::find($id);           // Recupera o prod pelo ID
 		>>>$prod->forceDelete();                 // Exclui definitivamente
 
 		ou 
 		
-		>>>Produto::find($id)->forceDelete();   // Também é possível fazer assim, em uma única linha
+		>>>Produto::find($id)->forceDelete();   // Tambï¿½m ï¿½ possï¿½vel fazer assim, em uma ï¿½nica linha
 			
 	9.6 Como exibir todos os registros, inclusive os "finalizados" com Soft Deleted?
 			
-		>>>Produto::withTrashed()->get()         // Através do método 'withTrashed'
+		>>>Produto::withTrashed()->get()         // Atravï¿½s do mï¿½todo 'withTrashed'
 		
 	9.7 Como verificar se um registro foi "finalizado"?
 	
 		>>>$produtos = Produto::withTrashed()->get()      // recupera todos os Produtos, inclusive os "finalizados"
-		>>>$produtos[0]->trashed()                        // verifica se o 1º produto foi marcado
+		>>>$produtos[0]->trashed()                        // verifica se o 1ï¿½ produto foi marcado
 		>>>true                                           // retorna TRUE ou FALSE
 		
 		
-	9.8 Como exibir apenas os registros “finalizados” com Soft Deleted?
+	9.8 Como exibir apenas os registros ï¿½finalizadosï¿½ com Soft Deleted?
 
-		>>>Produto::onlyTrashed()->get();          // Através do método 'onlyTrashed'
+		>>>Produto::onlyTrashed()->get();          // Atravï¿½s do mï¿½todo 'onlyTrashed'
 	
 	
 	9.9 Como "RESTAURAR" um registro deletado com Soft Deleted?
 
-		1ª FORMA: Buscando pelo Produto 'finalizado' + método 'RESTORE()'
+		1ï¿½ FORMA: Buscando pelo Produto 'finalizado' + mï¿½todo 'RESTORE()'
 		
 			>>>$produtos = Produto::onlyTrashed()->get()      // recupera todos os Produtos "finalizados"
-			>>>$prod = $produtos[0]                           // pega o 1º produto finalizado
+			>>>$prod = $produtos[0]                           // pega o 1ï¿½ produto finalizado
 			>>>$prod->restore();                              // Restaura o prod
 			 
-			//$prod = $prod->find($id)->restore();    // Também é possível fazer assim, em uma única linha
+			//$prod = $prod->find($id)->restore();    // Tambï¿½m ï¿½ possï¿½vel fazer assim, em uma ï¿½nica linha
 
-		2ª FORMA: Buscando pelo Usuário + método 'RESTORE()'
+		2ï¿½ FORMA: Buscando pelo Usuï¿½rio + mï¿½todo 'RESTORE()'
 		
 			$prod->withTrashed()
 				 ->where('user_id', auth()->user()->id)
 				 ->restore();
 	
-	9.5 
