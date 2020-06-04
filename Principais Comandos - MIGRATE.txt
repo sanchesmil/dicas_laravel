@@ -26,26 +26,27 @@ PRINCIPAIS COMANDOS - MIGRATE
 	
 	php artisan migrate:rollback
 
-6 - Desfazer todas as migrações
+6 - Reverter todas as migrações
 
 	php artisan migrate:reset
 
-	Obs.: Esse comando 'apaga' o banco.
+	Obs.: O comando migrate:reset reverterá todas as migrações do seu aplicativo
+	      
 
 7 - Desfazer e refazer todas as migrações
 
 	php artisan migrate:refresh
 
-	Obs.: Esse comando recria o banco sem nenhum registro
+	Obs.: O comando 'refresh' apagará e recriará somente as tabelas definidas pela migração, 
+	      mantendo as tabelas que não foram criadas por migração.
 
-8 - Apagar a base e refazer todas as migrações
+8 - Apagar toda a base e refazer todas as migrações
 
 	php artisan migrate:fresh
 
-	Obs.1: Neste caso, ele dropa direto todas as tabelas sem executar o método 'down' das migrations. 
-	Obs.2: Este comando é usado quando dá algum erro no comando 'refresh'. 
-
-
-
+	Obs.1: O comando 'migrate:fresh' apagará todas as tabelas do banco, inclusive as  
+               que não foram geradas por migração. 
+	       
+	       Logo em seguida, recriará somente as tabelas definidas por migração. 
 
               
