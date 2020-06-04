@@ -47,6 +47,16 @@ PRINCIPAIS COMANDOS - MIGRATE
 	Obs.1: O comando 'migrate:fresh' apagará todas as tabelas do banco, inclusive as  
                que não foram geradas por migração. 
 	       
-	       Logo em seguida, recriará somente as tabelas definidas por migração. 
+	       Logo em seguida, recriará somente as tabelas definidas por migração.
+	       
+9 - Rodar as migrations com seeds
+
+    cmd: php artisan migrate:refresh --seed
+
+    ou
+
+    cmd: php artisan migrate:fresh --seed
+
+    Obs.: Os comandos acima recriam o banco, apagando os dados pré-existentes e populando com os dados das seeds;
 
               
