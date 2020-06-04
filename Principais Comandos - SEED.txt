@@ -1,5 +1,58 @@
 PRINCIPAIS COMANDOS - SEED
 
 O que é o SEED?
+   
+   São classes php que servem para 'semear' ou 'popular' as tabelas do banco com dados de teste.
+   
+   As seeds também podem ser usadas para gerar os dados iniciais de uma aplicação, como por exemplo, 
+   criar o usuário administrador do sistema e os perfis de acesso no momento do deploy da aplicação.
 
+Como criar uma Seeder?
+
+   cmd: php artisan make:seeder CategoriaSeeder     (cria a seed CategoiraSeeder)
+   
+Onde as seeds são armazenadas?
+
+   No diretório 'database/seeds'
+   
+Exemplos de seed 'CategoriaSeeder':
+
+   class CategoiraSeeder extends Seeder
+   {
+    	public function run()
+    	{
+           // Deleta os registros da tabela CATEGORIAS antes de popular
+           DB::table('categorias')->delete();  
+
+           // Criação de Categorias usando o Facade DB
+           DB::table('categorias')->insert(['nome' => 'Roupas']);        // id = 1
+           DB::table('categorias')->insert(['nome' => 'Eletrônicos']);   // id = 2
+           DB::table('categorias')->insert(['nome' => 'Informática']);   // id = 3
+           DB::table('categorias')->insert(['nome' => 'Perfumes']);      // id = 4
+           DB::table('categorias')->insert(['nome' => 'Móveis']);        // id = 5
+           DB::table('categorias')->insert(['nome' => 'Alimentos']);     // id = 6
+        }
+   }
+
+Como executar uma seeder?
+
+  1ª Forma: 'db:seed'
+  
+  	cmd: php artisan db:seed
 	
+	Obs.: Por padrão, o comando 'db:seed' executa a classe DatabaseSeeder, 
+	      que pode ser usada para chamar outras classes de sementes.
+  
+   2ª Forma: 'db:seed' --class	
+
+   	cmd: php artisan db:seed --class=UsersTableSeeder
+	
+	Obs.:  A opção --class é usada para executar uma classe de semeadura específica
+
+   3ª Forma: Rodar as seeds junto com as migrations
+	
+	cmd: php artisan migrate:refresh --seed
+
+   	ou
+
+    	cmd: php artisan migrate:fresh --seed
