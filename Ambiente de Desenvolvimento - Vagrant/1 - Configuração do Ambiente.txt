@@ -1,0 +1,408 @@
+Configuração do ambiente local de desenvolvimento
+
+1º - Instalar o VirtualBox
+
+2º - Instalar o Vagrant
+
+3º - Reiniciar o computador
+
+4º - BAIXANDO a IMAGEM do UBUNTU/PRECISE (+ antigo):
+
+      Dentro da pasta do ambiente de desenv., na pasta PRECISE, executar os comandos de inicialização do vagrant:
+
+4.1 - Criar o Vagrantfile: 
+   
+      cmd> vagrant init hashicorp/precise64
+
+4.2 - Configurar o proxy no arquivo Vagrantfile conforme item 5.5 desta lista.
+
+4.3 - Importar a imagem e subir a máquina virtual: 
+
+     cmd> VAGRANT UP
+
+     Obs.: Caso a VM apresente erro e não suba, desative o Hyper-V em "Ativar ou desativar recursos do Windows" e 
+           reinicie a máquina local. Após isso, volte a rodar "vagrant up" e a VM subirá.
+	
+     Obs.: Caso a VM apresente erro de certificado SSL, setar o proxy da rede para: 
+	
+          cmd> set http_proxy=http://10.1.101.101:8080
+
+          cmd> set https_proxy=http://10.1.101.101:8080
+	
+5º - BAIXANDO a IMAGEM do UBUNTU/BIONIC (+ atual):
+
+      Dentro da pasta do ambiente de desenv., na pasta BIONIC, executar os comandos de inicialização do vagrant:
+
+5.1 - Criar o Vagrantfile: 
+  
+      cmd> vagrant init hashicorp/bionic64  ou criar manualmente o arquivo Vagrantfile e colar as configurações da ubuntu/bionic64: https://app.vagrantup.com/ubuntu/boxes/bionic64
+
+5.3 - Configurar o proxy no arquivo Vagrantfile conforme item 5.5 desta lista.
+
+5.4 - Importar a imagem e subir a máquina virtual: 
+
+     cmd> VAGRANT UP
+
+5.5 - CONFIGURAR o PROXY: 
+
+   Baixar plugin de configuração de proxy do vagrant:
+
+   cmd> vagrant plugin install vagrant-proxyconf
+
+   Configurar o proxy no arquivo Vagrantfile:
+
+   Add as linhas abaixo:  
+   
+   if Vagrant.has_plugin?("vagrant-proxyconf")
+     config.proxy.http     = "http://10.1.101.101:8080"
+     config.proxy.https    = "http://10.1.101.101:8080"
+     config.proxy.no_proxy = "localhost,127.0.0.1"
+   end
+
+
+OBS.: Após baixada a ISO do SO:
+
+     INICIALIZAR/SUBIR TODAS as VMs (sem realizar o provisionamento):   
+
+     cmd> vagrant up
+
+     INICIALIZAR uma VM específica
+  
+     cmd> vagrant up <NOME_VM_ESPECÍFICA>
+
+---------------------------------------------------
+INICIA os COMANDOS P/ INSTALAÇÃO MANUAL de SERVIÇOS nas VMS
+---------------------------------------------------
+	
+6º - Acessar a VM BIONIC via SSH:   
+	
+     cmd> vagrant ssh
+
+7º - Atualizar os pacotes da BIONIC:
+
+     Obs.: Antes de atualizar, deve-se configurar o Proxy conforme item 5.5 ou, caso a VM já esteja funcionando, 
+
+     executar o cmd abaixo via SSH na VM:
+
+     - Criar e abrir o arquivo 'apt.conf'
+	
+        cmd> nano /etc/apt/apt.conf
+
+     - Adicionar as linhas abaixo:
+
+       Acquire::http::proxy "http://10.1.101.101:8080";
+       Acquire::https::proxy "http://10.1.101.101:8080"; 
+
+     Atualizar os pacotes:
+	
+     cmd> sudo apt-get update
+     
+
+8º - Instalar o Servidor Nginx via SSH:
+
+     cmd> sudo apt-get install -y nginx
+
+     Obs.: -y = sim para tudo
+
+9º - Testar servidor Nginx:
+
+     cmd> netstat -lntp
+	
+     ou
+
+     cmd> curl http://localhost  (deverá receber o Html do Nginx)
+
+10º - Configurar Encaminhamento de rede, entre a máquina Host e a VM (Adaptador NAT)
+
+      Incluir a linha abaixo no arquivo de configurações "Vagrantfile" da VM BIONIC:
+
+      config.vm.network "forwarded_port", guest: 80, host:8080
+
+      Atualizar VM:
+  
+      cmd> vagrant reload
+
+11º - Configurando Rede Privada = Somente o Host consegue acessar a VM
+
+      Configurar IP Estático como rede privada (Adaptador Bridge): 
+
+      Incluir a linha abaixo no arquivo de configurações "Vagrantfile" da VM BIONIC:
+
+      config.vm.network "private_network", ip: "192.168.50.4"
+
+      Atualizar VM:
+  
+      cmd> vagrant reload
+
+      Obs.: No navegador do HOST basta digitar o IP para acessar a VM e o servidor web Nginx 
+
+12º - Ainda é possível configurar a Rede Privada através de IP dinâmico (DHCP) do VirtualBox (Usado em casos específicos)
+
+      Incluir a linha abaixo no arquivo de configurações "Vagrantfile" da VM BIONIC:
+
+      config.vm.network "private_network", type: "dhcp"
+
+      cmd> vagrant reload
+
+      Obs.: No navegador do HOST basta digitar o IP dinâmico gerado (ipconfig) para acessar a VM e o servidor web Nginx 
+
+13º - Configurando a VM na Rede Pública do hospedeiro (ex. empresa) com IP dinâmico = Todos da rede podem ter acesso à minha VM
+
+      Incluir a linha abaixo no arquivo de configurações "Vagrantfile" da VM BIONIC:
+
+      config.vm.network "public_network"
+
+      cmd> vagrant reload
+
+      Obs.: Se o terminal solicitar o adaptador, adicionar o valor 1.
+
+      Obs.: No navegador do HOST basta digitar o IP dinâmico gerado para acessar a VM e o servidor web Nginx 
+	
+14º - Configurando a VM na Rede Pública do hospedeiro com IP estático (ele deve estar disponível na rede)
+
+      Incluir a linha abaixo no arquivo de configurações "Vagrantfile" da VM BIONIC:
+
+      config.vm.network "public_network", ip: "10.204.0.124"
+	
+      Obs.: O IP deve estar disponível na rede. 
+
+      cmd> vagrant reload
+
+      Obs.: Se o terminal solicitar o adaptador, adicionar o valor 1.
+
+      Obs.: No navegador do HOST basta digitar o IP para acessar a VM e o servidor web Nginx 	
+
+15º - CONECTAR-SE REMOTAMENTE à VM via SSH através de outro PC da Rede:
+
+      Para que que outro PC na rede se conecte à VM via SSH, é necessário estabelecer uma AUTENTICAÇÃO baseada em 
+      Chave pública e Chave Privada.
+
+      * GERAÇÃO AUTOMÁTICA de CHAVES pelo VAGRANT:
+
+       Toda vez que 'subimos' uma VM, o Vagrant automaticamente gera um par de chaves. 
+       A chave pública é guardada na pasta "authorized_keys" dentro de ".ssh" (.ssh/Authorized_keys => dentro da VM).
+
+       A chave privada é usada pelo 'cliente' para se conectar à VM remotamente.
+      
+       A chave privada gerada pelo vagrant quando cria a VM fica armazenada fora da VM, 
+       no caminho: ".vagrant/machines/default/virtualbox/private_key"
+      
+      * Conexão com a VM a partir de qualquer PC da rede: 
+
+	Obs.: É necessário que o 'cliente' tenha instalado o SSH no terminal (ex. Git Bach) 
+              ou que tenha ferramenta que permita conexão SSH (ex. Putty)
+      
+        cmd> ssh -i <caminho_da_chave_privada> <usuario_vagrant>@<ip_da_vm>
+
+        Exemplo> ssh -i .vagrant/machines/default/virtualbox/private_key vagrant@10.204.0.124
+
+        Obs.: Desta forma é estabelecida a conexão entre um PC qualquer da rede e a VM.
+
+      * GERANDO as PRÓPRIAS CHAVES
+
+      Na raiz do projeto, em um terminal que permita o cmd 'ssh' (ex. Git Bash) executar:
+
+      cmd> ssh-keygen -t rsa   (Gera as chaves pública e privada)
+
+      Será solicitado o local de gravação das chaves. Incluir o nome que deseja dar às chaves. (ex.id_bionic)
+
+      Ex. /d/desenvolvimento/ambiente_dev_vagrant/bionic/id_bionic
+     
+      Serão geradas duas chaves: id_bionic (privada) e id_bionic.pub (publica)
+      
+      * Copiar a chave pública para dentro da VM:
+
+        Entrar na VM: 
+
+        cmd> vagrant ssh
+    
+        Visualizar o conteúdo da pasta compartilhada entre o Host e a VM:
+
+        cmd> ls /vagrant/
+
+        Copiar a chave 'id_bionic.pub' para a raiz (.) da VM:
+	
+	cmd> cp /vagrant/id_bionic.pub . 
+
+	Copiar o conteúdo da chave 'id_bionic.pub' para dentro do arquivo de chaves '.ssh/Authorized_keys' da VM:
+
+        cmd> cat id_bionic.pub >> .ssh/Authorized_keys
+
+      * Conexão com a VM a partir de qualquer PC da rede: 
+      
+        cmd> ssh -i id_bionic vagrant@10.204.0.124
+
+        Obs.: Desta forma é estabelecida a conexão entre um PC qualquer da rede e a VM.
+
+16º - Compartilhamento de Pastas entre o Host e a VM
+
+      Por padrão, na criação da VM, o vagrant mapeia a raiz da pasta vagrant no Host para 
+      a pasta "/vagrant" na VM:
+
+      Ex.: default: /vagrant => D:/ambiente_dev/bionic
+
+      Todavia, posso e 'devo' configurar uma pasta de configurações, as quais serão usadas durante 
+      o provisionamento da VM.
+
+      Para isso, devo incluir as linhas abaixo no arquivo Vagrantfile:
+
+      => config.vm.synced_folder "./configs", "/configs"
+
+      e dasabilitar o mapeamento padrão do vagrant:
+
+      => config.vm.synced_folder ".", "/vagrant", disabled: true
+
+------------------------------------------------------------
+COMANDOS P/ PROVISIONAR AUTOMATICAMENTE os SERVIÇOS nas VMS
+------------------------------------------------------------
+       
+17º - PROVISIONAMENTO da VM
+
+      Provisionamento da VM consiste em preparar a máquina de forma automática para o fornecimento de um serviço ou 
+      ainda, significa instalar e configurar tudo o que for necessário para rodar algum serviço ou aplicação
+
+      Provisionamento também significa configurar a VM para fornecer a rede, CPU, memória, espaço em disco, 
+      SO, pacotes, softwares e tudo o que for preciso para rodar/executar um serviço ou aplicação, de forma 
+      que possa ser repetido a qualquer momento.
+
+      Por padrão, o Vagrant não instala uma série de características, como: chaves que eu gero, banco de dados, servidor web, etc.
+
+      Todavia, através de Provisionadores é possível realizar esta tarefa de forma automática no momento em que
+      a VM for criada.
+
+      Exemplos de Provisionadores: file, shell, Puppet, Ansible 
+
+      PROVISIONADOR SHELL:  + básico
+
+      Os comandos do Shell Provisioner podem ser usados no modo inline (em linha) ou path (remoto):
+
+      Modo INLINE:
+
+      config.vm.provision "shell", inline: "cat /configs/id_bionic.pub >> .ssh/authorized_keys"
+
+      Obs.: Neste caso, o script copia a minha chave pública para dentro do arquivo .ssh/authorized_keys da VM.
+
+      Modo REMOTO (PATH): 
+      
+      config.vm.provision "shell", path: "script.sh"  OU 
+
+      config.vm.provision "shell", path: "https://seu-servidor/script.sh"
+
+      Obs.: Nestes casos, o provisionador executa o script de um arquivo externo ao Vagrantfile.
+
+18º - Provisionando um Banco de Dados MYSQL usando uma variável de Script e o Shel Provision no modo Inline:
+
+      Com o 'shell' é possível chamar inline uma variável que contenha um script.
+     
+      * Definição da variável com o scritp para instalar o MySQL 5.7 e criar o usuario 
+      que pode acessar a máquina virtual a partir de qualquer host (com %): 
+
+      $script_mysql = <<-SCRIPT
+                         apt-get update && \
+                         apt-get install -y mysql-server-5.7 && \
+                         mysql -e "create user 'phpuser'@'%' identified by 'admin';"
+                         SCRIPT  
+
+      Obs.: nome do usuário = 'phpuser' e senha = 'admin'
+
+      * Chamando a variável via shell provision:
+      
+      config.vm.provision "shell", inline: $script_mysql
+
+      Obs.: ACESSO ao MySQL por OUTRAS MÁQUINAS:
+
+            Para que outras máquinas possam se conectar ao MySQL deve-se redefinir o 
+            arquivo de configuração do MySQL, o "mysql.cnf", alterando o valor da 
+            variável 'bind-adress' de '127.0.0.1' para '0.0.0.0'.
+        
+            Caminho do arquivo na VM: /etc/mysql/mysql.conf.d/mysqld.cnf
+
+      PROVISIONAMENTO com PUPPET 
+
+      O Puppet é uma ferramenta popular para provisionar uma máquina.
+
+      Com Puppet, podemos definir os passos de instalação de mais alto nível, facilitando a manutenção.
+
+      Os passos de instalação são configurados em um arquivo manifest, com a extensão .pp
+
+         Ex.:  manifests/phpweb.pp
+
+      Para rodar o Puppet, é preciso instalar um cliente na máquina virtual:
+
+         Ex.: phpweb.vm.provision "shell", inline: "apt-get update && apt-get install -y puppet"
+
+      O Vagrant integra e consegue chamar o Puppet a partir do comando: vagrant provision
+
+      Para configurar o Puppet dentro do Vagrantfile, basta usar:
+
+         config.vm.provision "puppet" do |puppet|
+  	   puppet.manifests_path = "caminho_do_arquivo_manifests"
+  	   puppet.manifest_file = "arquivo.pp"
+         end
+
+      Obs.: O Puppet "PUXA" as configurações do host para o guest.
+
+      PROVISIONAMENTO com ANSIBLE
+
+      Diferente do Puppet, o Ansible não precisa ser instalado na máquina Guest (VM), 
+      mas deve estar presente na máquina Host, ou seja, precisa estar instalado 
+      na máquina real hospedeira.
+
+      Todavia, o Ansible não roda no Windows, somente em Mac ou Linux.
+      Para contornar este problema, cria-se uma nova VM linux somente para executar o Ansible.
+      
+      Obs.: Caso a máquina Host seja Linux não é preciso instalar uma nova VM com Ansible.
+
+      Os passos para o provisionamento de VM são feitos em um documento "playbook.yml", 
+      análogo aos arquivos .pp do Puppet.
+
+      Obs.: O Ansible "EMPURRA" as configurações do host para o guest. 
+
+19º - Provisionando o DOCKER no modo Inline:
+
+      Criar uma nova VM com nome de 'dockehost', conforme as configurações padrão e adicionar a linha:
+
+      => dockerhost.vm.provision "shell", inline: "apt-get update && apt-get install -y docker.io"
+
+      Esta linha 'provisiona ou instala' o Docker
+
+      * SUBIR a VM individualmente:
+
+           cmd> vagrant up dockerfile
+
+      * ACESSAR a VM:
+
+           cmd> vagrant ssh dockerhost
+
+      * Verificar a versão do Docker:
+
+           cmd> sudo docker --version
+
+      * Baixar CONTAINERS ou IMAGENS/BOXES pré-configurados do DOCKER
+        
+           Assim como o Vagrant usa 'boxes' para configurar os ambientes, o Docker oferece 
+           CONTAINERS ou IMAGENS ('box') pré-configurados que eu posso baixar e executar.
+
+           Página de boxes docker pré-configurados: https://hub.docker.com/search
+
+      * Inicializar o 'Container/Imagem' Hello-World dentro da VM com Docker
+	
+           cmd> sudo docker run hello-world  
+      
+           Obs.: Inicialmente este comando baixa o container e depois roda ele, mostrando 
+           o resultado no terminal.
+	
+
+20º - COMANDOS VAGRANT
+	
+vagrant version - verifica a versão do vagrant
+vagrant up - roda a VM
+vagrant status - verifica o status de todas as VMs na pasta local
+vagrant global-status = verifica o status de todas as VMs no sistema inteiro
+vagrant halt - parar a VM
+vagrant suspend - suspender a VM
+vagrant ssh - conectar via SSH com o SO da VM  (ou via GIT Bash)
+vagrant ssh-config = Lista as configurações da VM, como Host name, Porta, usuário e local da chave privada.
+vagrant destroy -f = exclui a imagem da VM no virtualbox sem excluir o arquivo físico real.
+vagrant provision - executa todos os provisionadores configurados no arquivo Vagrantfile
+vagrant validate - Verifica se o arquivo Vagrantfile é válido

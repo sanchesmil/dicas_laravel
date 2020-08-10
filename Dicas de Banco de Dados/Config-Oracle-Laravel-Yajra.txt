@@ -1,0 +1,69 @@
+
+Configuração do ambiente para baixar o driver 'yajra' de conexão do Laravel com o Oracle:
+
+
+1 - Baixar o Instant Client Oracle (OCI):
+
+    1.1 - Baixar o pacote Básico do Instant Client Oracle (OCI) conforme a versão da máquina local (32 ou 64bits) e
+    conforme a versão do banco. No caso da PR, o banco é Oracle 11g.
+
+    	  Link win64: https://www.oracle.com/br/database/technologies/instant-client/winx64-64-downloads.html
+
+    	  Escolher: Version 11.2.0.4.0
+
+    1.2 - Descompactar o arquivo baixado em uma pasta do sistema.
+
+	  Ex: Descompactar na raiz do C:\instantclient_11_2
+
+    1.3 - Configurar a variável de ambiente "PATH" do windows para apontar para esta pasta:
+	
+	  Incluir um novo registro => 'C:\instantclient_11_2'
+
+    1.4 - É necessário colar o arquivo 'TNSNAMES.ORA' e 'SQLNET.ORA' 
+	  na raiz da pasta 'C:\instantclient_11_2'. 
+
+	  Obs.: É este arquivo que permite conectar ao banco oracle da presidência.
+
+    1.5 - Reiniciar a máquina.
+	
+	  Obs.: Só depois de reiniciar a máquia é que funcionou.
+
+2 - Baixar as dlls de extensão do oci8 para PHP:
+ 
+    2.1 - Verificar a versão do PHP na máquina local, no Prompt: php -v
+	
+	  Ex.: PHP 7.2.27 (cli) (built: Jan 22 2020 11:54:46) ( NTS MSVC15 (Visual C++ 2017) x64 )
+	
+	  Obs.: O 'NTS'....x64 indica que devo baixar a extensão 'Non Thread Safe (NTS), versão x64.
+	
+    2.2 - Acessar o link: https://pecl.php.net/package/oci8/2.2.0/windows
+
+	  Escolher a extensão conforme a versão do PHP (no meu caso, PHP 7.2).
+
+	  Escolher => "7.2 Non Thread Safe (NTS) x64"
+
+    2.3 - Após baixar o arquivo:
+	
+	  - Abrir o zip
+	  - Selecionar as dlls que precisarei usar => php_oci8.dll e php_oci8_11g.dll
+	  - Salvar no diretório "php/ext" do xampp/wamp ou onde o php estiver isntalado.
+
+3 - Abrir o arquivo 'php.ini' dentro do PHP e habilitar as extensões do oci:  
+   	  - extension_dir = "C:\php\ext"  (configure conforme o local do php na sua máquina)
+          - extension=oci8_11g 
+
+4 - Baixar o DRIVER de conexão do Laravel com Oracle:
+
+    4.1 - Acessar a raiz do projeto via cmd 
+
+    4.2 - Digitar o comando: composer require yajra/laravel-oci8:^5.8
+
+	  Obs.: Atentar para a versão do Laravel instalado. No meu caso, 5.8. 
+                Caso não coloque o delimitador ^5.8 o composer vai tentar baixar
+                a última versão do 'yajra', porém lançará um erro de incompatibilidade. 
+
+	 
+Variável Path
+C:\Oracle\product\11.2.0\client_1\bin
+
+	

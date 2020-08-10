@@ -1,0 +1,106 @@
+
+
+1 - CONFLITOS de PROXY para usar GITLAB(Intranet PR) e GITHUB(Internet)
+________________________________________________
+
+O GitLab da PR e o GitHub/GitLab da internet podem funcionar ao mesmo tempo, para isso, é necessário
+realizar as devidas configurações de Proxy.
+
+Se o proxy 'global' estiver setado para 10.1.101.101:8080 (internet), não será possível usar o GitLab da PR, 
+o qual apresentará o seguinte erro:
+
+    fatal: unable to access 'https://git.presidencia.gov.br/eprojuds/teste.git/': Received HTTP code 502 from proxy after CONNECT
+
+Se o proxy estiver vazio (""), o GitLab da PR funcionará normalmente, porém o GitHub (internet) não funcionará e apresentará 
+o seguinte erro:
+
+    fatal: unable to access 'https://github.com/sanchesmil/teste_github.git/': The requested URL returned error: 403
+
+Como usar o GITLAB/PR e GITHUB/GITLAB da INTERNET ao mesmo tempo?
+
+  Basta setar a configuração de proxy "global" para todos os projetos que acessam o repositório da internet (GITHUB/GITLAB) como:
+	
+	1º) Setar o repositório remoto:
+	
+	Ex.: cmd> 
+
+	2º) Setar as configurações de proxy global:
+
+	cmd> git config --global --add remote.origin.proxy "http://10.1.101.101:8080"
+
+	Obs.: O comando acima funciona via prompt do Windows, todavia, não funcionou no terminal da ferramenta VSCode.
+
+  E setar o proxy "local" para "vazio" em cada projeto individualmente que acessa o repositório local (GITLAB/PR):
+ 	
+	1º) Setar o repositório remoto no projeto local:
+
+	     cmd> git remote add origin https://git.presidencia.gov.br/eprojuds/novo_opus.git
+
+	2º) Setar as configurações de proxy local do projeto para vazio:
+
+	     cmd> git config --local --add remote.origin.proxy ""
+
+	Obs.: O comando acima funciona via prompt do Windows, todavia, não funcionou no terminal da ferramenta VSCode.
+
+
+Obs.1: Em ambos os casos, toda vez que os comandos acima são executados no terminal o arquivo 
+".gitconfig" (em C:\Users\pedrosanches) recebe uma nova entrada com o valor do proxy: 
+
+ Ex.: cmd> git config --global --add remote.origin.proxy ""
+    
+     Arquivo .gitconfig:      
+
+     [remote "origin"]
+	
+           proxy = 
+
+ Ex.: cmd> git config --global --add remote.origin.proxy "http://10.1.101.101:8080"
+
+     Arquivo .gitconfig:      
+
+     [remote "origin"]
+	
+           proxy = 
+           proxy = 10.1.101.101:8080
+
+Obs.: No comando ...remote.ORIGIN.proxy..., a palavra ORIGIN representa o 
+      nome do repositório localmente, ou seja, poderia ser outro nome.
+
+
+2 - ERRO de CERTIFICADO SSL
+______________________________
+
+
+Desabilitar o controle de certificados no projeto LOCAL:
+
+Ex.: git config http.sslverify false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

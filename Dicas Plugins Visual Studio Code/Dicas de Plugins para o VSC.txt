@@ -1,0 +1,4 @@
+- DotENV
+- Laravel 5 Snippets
+- Laravel Blade Snippets
+- PHP Intelephense
